@@ -1,0 +1,13 @@
+<section class="page">
+  <h1>Trending claims this week</h1>
+  <p class="lede">Only claims that at least three different people checked are listed.</p>
+  <p ng-if="loading">Loading…</p>
+  <p ng-if="!loading && !items.length" class="muted">Nothing is trending yet.</p>
+  <ul class="history">
+    <li ng-repeat="i in items">
+      <span class="tag" ng-class="cls(i.verdict)">{{ i.verdict }}</span>
+      <a ng-href="#!/result/{{ i.id }}">{{ i.text }}</a>
+      <span class="muted">checked {{ i.count }} times</span>
+    </li>
+  </ul>
+</section>

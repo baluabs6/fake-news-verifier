@@ -1,0 +1,4 @@
+{"claim": "The Great Wall of China is visible to the naked eye from the Moon.", "label": "False", "lang": "en"}
+{"claim": "Vaccines cause autism.", "label": "False", "lang": "en"}
+{"claim": "The Earth orbits the Sun.", "label": "True", "lang": "en"}
+{"claim": "Water boils at a lower temperature at high altitude than at sea level.", "label": "True", "lang": "en"}

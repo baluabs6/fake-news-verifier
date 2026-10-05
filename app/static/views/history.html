@@ -1,0 +1,12 @@
+<section class="page">
+  <h1>My checks</h1>
+  <p ng-if="loading">Loading…</p>
+  <p ng-if="!loading && !items.length" class="muted">Nothing here yet. <a href="#!/">Check your first claim.</a></p>
+  <ul class="history">
+    <li ng-repeat="i in items">
+      <span class="tag" ng-class="cls(i.verdict)">{{ i.verdict }}</span>
+      <a ng-href="#!/result/{{ i.id }}">{{ i.input }}</a>
+      <span class="muted">{{ i.created_at | date:'d MMM, h:mm a' }}</span>
+    </li>
+  </ul>
+</section>

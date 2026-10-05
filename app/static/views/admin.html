@@ -1,0 +1,27 @@
+<section class="page">
+  <h1>Reviewer queue</h1>
+  <form ng-submit="load()" class="row">
+    <input type="password" ng-model="key" placeholder="Admin key" aria-label="Admin key" autocomplete="off">
+    <button class="primary" type="submit">Load</button>
+  </form>
+  <p class="error" ng-if="error">{{ error }}</p>
+
+  <div class="stats" ng-if="stats">
+    <span>{{ stats.total_checks }} checks</span><span>{{ stats.last_7_days }} this week</span>
+    <span>{{ stats.open_flags }} open flags</span><span>{{ stats.reviewed }} reviewed</span>
+    <span>~{{ stats.avg_input_tokens }} in / {{ stats.avg_output_tokens }} out tokens per check</span>
+  </div>
+
+  <article class="claim" ng-repeat="it in items">
+    <p><span class="tag" ng-class="cls(it.verdict)">{{ it.verdict }}</span>
+      <span class="muted">{{ pct(it.confidence) }}% · {{ it.reasons.join(', ') }}</span>
+      <a ng-href="#!/result/{{ it.id }}" target="_blank">open</a></p>
+    <p>{{ it.input }}</p>
+    <p class="muted" ng-repeat="n in it.notes">“{{ n }}”</p>
+    <textarea ng-model="it.reviewNote" rows="2" maxlength="1000" placeholder="Reviewer note (optional)"></textarea>
+    <div class="row">
+      <button class="ghost-btn" ng-repeat="v in ['True','False','Misleading','Unverified']" ng-click="review(it, v)">Mark {{ v }}</button>
+    </div>
+  </article>
+  <p class="muted" ng-if="!items.length && !error">Queue is empty.</p>
+</section>

@@ -1,0 +1,22 @@
+<section class="page">
+  <h1>Paste a claim. See the evidence behind the verdict.</h1>
+  <p class="lede">Works with headlines, WhatsApp forwards, social posts and article links, in English, Hindi or Telugu.</p>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" ng-class="{on: mode==='text'}" ng-click="setMode('text')">Claim or post</button>
+    <button role="tab" ng-class="{on: mode==='url'}" ng-click="setMode('url')">Article link</button>
+  </div>
+
+  <form ng-submit="submit()" novalidate>
+    <textarea ng-if="mode==='text'" ng-model="f.text" rows="6" maxlength="5000" aria-label="Claim to check"
+      placeholder="Example: The government has announced that all ₹500 notes will be withdrawn next month."></textarea>
+    <input ng-if="mode==='url'" type="url" ng-model="f.url" aria-label="Article link" placeholder="https://example.com/news/article">
+    <label class="check"><input type="checkbox" ng-model="f.save"> Save this check (needed for a share link)</label>
+    <div class="row">
+      <button class="primary" type="submit" ng-disabled="busy">{{ busy ? 'Checking…' : 'Check claim' }}</button>
+      <span class="status" ng-if="busy" aria-live="polite">{{ step }}</span>
+    </div>
+    <p class="error" ng-if="error" role="alert">{{ error }}</p>
+    <p class="muted">Phone numbers, emails, Aadhaar, PAN and UPI IDs are removed before anything is stored or analysed.</p>
+  </form>
+</section>

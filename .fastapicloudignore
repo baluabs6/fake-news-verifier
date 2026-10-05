@@ -1,0 +1,8 @@
+# Files that do not need to be uploaded with the deployed app
+.github/
+tests/
+eval/
+ingest/
+data/
+docker-compose.yml
+CHANGELOG.md

@@ -1,0 +1,8 @@
+[
+  {"name": "Alt News", "site": "https://www.altnews.in", "lang": "en"},
+  {"name": "BOOM", "site": "https://www.boomlive.in", "lang": "en"},
+  {"name": "Factly", "site": "https://factly.in", "lang": "en"},
+  {"name": "Vishvas News", "site": "https://www.vishvasnews.com", "lang": "hi"},
+  {"name": "Newschecker", "site": "https://newschecker.in", "lang": "en"},
+  {"name": "PIB Fact Check", "site": "https://factcheck.pib.gov.in", "lang": "en"}
+]

@@ -1,0 +1,99 @@
+<section class="page">
+  <p ng-if="loading">Loading result…</p>
+  <p class="error" ng-if="error">{{ error }} <a href="#!/">Check something new</a></p>
+
+  <div ng-if="r">
+    <div class="verdict" ng-class="cls(r.verdict)">
+      <div class="word">{{ r.verdict }}</div>
+      <div ng-if="decided(r.verdict)">
+        <div class="meter" title="Evidence strength"><span ng-style="{width: pct(r.confidence) + '%'}"></span></div>
+        <div class="conf">Evidence strength {{ pct(r.confidence) }}%</div>
+      </div>
+      <div class="conf" ng-if="r.verdict === 'Unverified'">Not enough reliable evidence to decide.</div>
+    </div>
+
+    <p class="badge" ng-if="r.review">Reviewed by a person: <strong>{{ r.review.verdict }}</strong>
+      <span ng-if="r.review.note"> · {{ r.review.note }}</span></p>
+    <p class="notice" ng-if="r.stale">This check is from {{ r.as_of | date:'d MMM y' }} and may be out of date.
+      <button class="linkbtn" ng-click="recheck()" ng-disabled="rechecking">{{ rechecking ? 'Re-checking…' : 'Re-check now' }}</button></p>
+
+    <div class="warn" ng-if="r.warnings.length">
+      <strong>Scam warning signs (not a verdict):</strong>
+      <ul><li ng-repeat="w in r.warnings">{{ w }}</li></ul>
+    </div>
+    <p class="muted" ng-if="r.privacy">Personal details were removed from your input: {{ r.privacy.redacted | json }}.</p>
+
+    <p class="quote">{{ r.input }}</p>
+    <p class="summary">{{ r.summary }}</p>
+
+    <article class="claim" ng-repeat="c in r.claims">
+      <h2>{{ c.claim }}</h2>
+      <p><span class="tag" ng-class="cls(c.verdict)">{{ c.verdict }}</span>
+        <span class="muted" ng-if="decided(c.verdict)">evidence strength {{ pct(c.confidence) }}%</span></p>
+      <p>{{ c.reasoning }}</p>
+
+      <details ng-if="c.confidence_breakdown && decided(c.verdict)">
+        <summary>How is this strength calculated?</summary>
+        <ul class="muted">
+          <li>{{ c.confidence_breakdown.independent_sources }} independent source(s) agree (copies of the same story count once)</li>
+          <li>Best source reliability {{ pct(c.confidence_breakdown.best_reliability) }}%</li>
+          <li>{{ c.confidence_breakdown.fact_checker_backed ? 'Backed by a published fact-check' : 'No published fact-check found' }}</li>
+          <li>{{ c.confidence_breakdown.conflicting_sources }} conflicting source(s)</li>
+        </ul>
+      </details>
+
+      <div class="group" ng-repeat="g in c.groups">
+        <h3 ng-class="'s-' + g.key">{{ g.label }}</h3>
+        <ul class="sources">
+          <li ng-repeat="e in g.items">
+            <a ng-href="{{ e.url }}" target="_blank" rel="noopener noreferrer">{{ e.title }}</a>
+            <div class="muted">{{ e.publisher }}<span ng-if="e.rating"> · rated “{{ e.rating }}”</span> · source reliability {{ pct(e.credibility) }}%</div>
+          </li>
+        </ul>
+      </div>
+      <p class="muted" ng-if="!c.groups.length">No reliable source was found for this claim.</p>
+    </article>
+
+    <section class="share" ng-if="r.saved !== false">
+      <h2>Reply with the facts</h2>
+      <div class="row">
+        <select ng-model="ui.lang" ng-change="loadCard()" aria-label="Language">
+          <option value="en">English</option><option value="hi">हिन्दी</option><option value="te">తెలుగు</option>
+        </select>
+        <button class="primary" ng-click="loadCard()">Create message</button>
+      </div>
+      <p class="error" ng-if="cardError">{{ cardError }}</p>
+      <div ng-if="ui.card">
+        <textarea rows="7" ng-model="ui.card" aria-label="Message to share (you can edit it)"></textarea>
+        <div class="row">
+          <button class="primary" ng-click="copyCard()">{{ copied ? 'Copied' : 'Copy message' }}</button>
+          <a class="ghost" ng-href="https://wa.me/?text={{ ui.card | urlenc }}" target="_blank" rel="noopener noreferrer">Send on WhatsApp</a>
+        </div>
+      </div>
+      <div class="row">
+        <button class="ghost-btn" ng-click="copyLink()">{{ copiedLink ? 'Link copied' : 'Copy result link' }}</button>
+      </div>
+    </section>
+    <p class="muted" ng-if="r.saved === false">This check was not saved, so it has no share link.</p>
+
+    <section class="flag" ng-if="r.saved !== false">
+      <details>
+        <summary>Think this is wrong? Tell us</summary>
+        <div ng-if="!flag.sent">
+          <select ng-model="flag.reason" aria-label="Reason">
+            <option value="wrong_verdict">The verdict is wrong</option>
+            <option value="missing_context">Important context is missing</option>
+            <option value="outdated">It is out of date</option>
+            <option value="other">Something else</option>
+          </select>
+          <textarea ng-model="flag.note" rows="3" maxlength="500" placeholder="Optional: what should we look at?"></textarea>
+          <button class="primary" ng-click="sendFlag()">Send to a reviewer</button>
+          <p class="error" ng-if="flag.error">{{ flag.error }}</p>
+        </div>
+        <p ng-if="flag.sent">Thank you. A reviewer will look at this.</p>
+      </details>
+    </section>
+
+    <div class="row"><a class="ghost" href="#!/">Check another claim</a></div>
+  </div>
+</section>
